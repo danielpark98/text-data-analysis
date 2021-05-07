@@ -1,0 +1,405 @@
+#Problem1#
+
+GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "state": "IL" } }
+      ]
+      
+    }
+  },
+  
+        "sort": { "balance": { "order": "desc" } }
+
+}
+
+#Problem2#
+GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match_all" :{} }
+      ],
+      
+          "filter":{
+      "range":{
+        "age":{
+          "gte":30,
+          "lte": 39
+          
+        }
+        }
+    }
+      
+    }
+  },
+        "sort": { "balance": { "order": "desc" } }
+
+}
+{
+        "_index" : "bank",
+        "_type" : "_doc",
+        "_id" : "248",
+        "_score" : null,
+        "_source" : {
+          "account_number" : 248,
+          "balance" : 49989,
+          "firstname" : "West",
+          "lastname" : "England",
+          "age" : 36,
+          "gender" : "M",
+          "address" : "717 Hendrickson Place",
+          "employer" : "Obliq",
+          "email" : "westengland@obliq.com",
+          "city" : "Maury",
+          "state" : "WA"
+        },
+
+
+"max_score" : null,
+    "hits" : [
+      {
+        "_index" : "bank",
+        "_type" : "_doc",
+        "_id" : "168",
+        "_score" : null,
+        "_source" : {
+          "account_number" : 168,
+          "balance" : 49568,
+          "firstname" : "Carissa",
+          "lastname" : "Simon",
+          "age" : 20,
+          "gender" : "M",
+          "address" : "975 Flatbush Avenue",
+          "employer" : "Zillacom",
+          "email" : "carissasimon@zillacom.com",
+          "city" : "Neibert",
+          "state" : "IL"
+        },
+
+
+
+
+
+#Problem 3# 
+
+GET /bank/_search
+{
+  "size": 0,
+  "aggs": {
+    "group_by_state": {
+      "terms": {
+        "field": "state.keyword"
+      },
+      "aggs": {
+        "group_by_gender": {
+          "terms": {
+            "field": "gender.keyword"
+          },
+          "aggs": {
+            "average_balance": {
+              "avg": {
+                "field": "balance"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+GET /bank/_search
+{
+  "size": 0,
+  "aggs": {
+    "group_by_state": {
+      "terms": {
+        "field": "state.keyword"
+      },
+      "aggs": {
+        "group_by_gender": {
+          "terms": {
+            "field": "gender.keyword"
+          },
+          "aggs": {
+            "average_balance": {
+              "avg": {
+                "field": "balance"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+{
+  "took" : 24,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : {
+      "value" : 1000,
+      "relation" : "eq"
+    },
+    "max_score" : null,
+    "hits" : [ ]
+  },
+  "aggregations" : {
+    "group_by_state" : {
+      "doc_count_error_upper_bound" : 18,
+      "sum_other_doc_count" : 764,
+      "buckets" : [
+        {
+          "key" : "TX",
+          "doc_count" : 30,
+          "group_by_gender" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "F",
+                "doc_count" : 17,
+                "average_balance" : {
+                  "value" : 29746.352941176472
+                }
+              },
+              {
+                "key" : "M",
+                "doc_count" : 13,
+                "average_balance" : {
+                  "value" : 21270.076923076922
+                }
+              }
+            ]
+          }
+        },
+        {
+          "key" : "ID",
+          "doc_count" : 27,
+          "group_by_gender" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "M",
+                "doc_count" : 17,
+                "average_balance" : {
+                  "value" : 22140.823529411766
+                }
+              },
+              {
+                "key" : "F",
+                "doc_count" : 10,
+                "average_balance" : {
+                  "value" : 28156.3
+                }
+              }
+            ]
+          }
+        },
+        {
+          "key" : "MD",
+          "doc_count" : 25,
+          "group_by_gender" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "M",
+                "doc_count" : 16,
+                "average_balance" : {
+                  "value" : 25645.9375
+                }
+              },
+              {
+                "key" : "F",
+                "doc_count" : 9,
+                "average_balance" : {
+                  "value" : 27149.88888888889
+                }
+              }
+            ]
+          }
+        },
+        {
+          "key" : "MA",
+          "doc_count" : 24,
+          "group_by_gender" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "F",
+                "doc_count" : 13,
+                "average_balance" : {
+                  "value" : 28968.0
+                }
+              },
+              {
+                "key" : "M",
+                "doc_count" : 11,
+                "average_balance" : {
+                  "value" : 30347.636363636364
+                }
+              }
+            ]
+          }
+        },
+        {
+          "key" : "AL",
+          "doc_count" : 23,
+          "group_by_gender" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "F",
+                "doc_count" : 12,
+                "average_balance" : {
+                  "value" : 29292.75
+                }
+              },
+              {
+                "key" : "M",
+                "doc_count" : 11,
+                "average_balance" : {
+                  "value" : 21406.545454545456
+                }
+              }
+            ]
+          }
+        },
+        {
+          "key" : "ME",
+          "doc_count" : 23,
+          "group_by_gender" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "M",
+                "doc_count" : 15,
+                "average_balance" : {
+                  "value" : 24773.2
+                }
+              },
+              {
+                "key" : "F",
+                "doc_count" : 8,
+                "average_balance" : {
+                  "value" : 15735.375
+                }
+              }
+            ]
+          }
+        },
+        {
+          "key" : "TN",
+          "doc_count" : 23,
+          "group_by_gender" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "F",
+                "doc_count" : 12,
+                "average_balance" : {
+                  "value" : 27878.416666666668
+                }
+              },
+              {
+                "key" : "M",
+                "doc_count" : 11,
+                "average_balance" : {
+                  "value" : 26138.272727272728
+                }
+              }
+            ]
+          }
+        },
+        {
+          "key" : "NC",
+          "doc_count" : 21,
+          "group_by_gender" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "F",
+                "doc_count" : 12,
+                "average_balance" : {
+                  "value" : 29397.25
+                }
+              },
+              {
+                "key" : "M",
+                "doc_count" : 9,
+                "average_balance" : {
+                  "value" : 21821.333333333332
+                }
+              }
+            ]
+          }
+        },
+        {
+          "key" : "AK",
+          "doc_count" : 20,
+          "group_by_gender" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "M",
+                "doc_count" : 12,
+                "average_balance" : {
+                  "value" : 25808.166666666668
+                }
+              },
+              {
+                "key" : "F",
+                "doc_count" : 8,
+                "average_balance" : {
+                  "value" : 25351.875
+                }
+              }
+            ]
+          }
+        },
+        {
+          "key" : "WY",
+          "doc_count" : 20,
+          "group_by_gender" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "M",
+                "doc_count" : 11,
+                "average_balance" : {
+                  "value" : 16111.636363636364
+                }
+              },
+              {
+                "key" : "F",
+                "doc_count" : 9,
+                "average_balance" : {
+                  "value" : 31918.88888888889
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
